@@ -20,7 +20,7 @@ def copy_bepinex(ctx, version="5.4.21"):
         f"/v{version}/BepInEx_unix_{version}.0.zip "
         "-O ~/Downloads/BepInEx/BepInEx.zip"
     )
-    ctx.run("unzip ~/Downloads/BepInEx/BepInEx.zip")
+    ctx.run("unzip ~/Downloads/BepInEx/BepInEx.zip -d ~/Downloads/BepInEx")
     ctx.run("rm ~/Downloads/BepInEx/BepInEx.zip")
     ctx.run(
         r"cp -rv "
