@@ -4,18 +4,21 @@ Mac based build commands
 
 # builtin
 import copy
+import enum
 
 
 # 3rd party
 import invoke
 
 
+class VARS(enum.Enum):
+    BEPINEX_VERSION = "5.4.21"
+    TIMBERAPI_VERSION = "0.5.0.0"
+    STEAMAPP = r"~/Library/Application\ Support/Steam/steamapps/common/Timberborn/"
+
+
 @invoke.task
-def setup_bepinex(
-    ctx,
-    version="5.4.21",
-    steamapp=r"~/Library/Application\ Support/Steam/steamapps/common/Timberborn/",
-):
+def setup_bepinex(ctx):
     """
     setup https://github.com/BepInEx/BepInEx/releases in the Timberborn folder
     """
@@ -27,12 +30,12 @@ def setup_bepinex(
     ctx.run("rm -rf .downloads/BepInEx")
     ctx.run("mkdir -p .downloads/BepInEx")
     ctx.run(
-        "wget -q "
+        "wget "
         "https://github.com/BepInEx/BepInEx/releases/download"
-        f"/v{version}/BepInEx_unix_{version}.0.zip "
+        f"/v{VARS.BEPINEX_VERSION.value}/BepInEx_unix_{VARS.BEPINEX_VERSION.value}.0.zip "
         "-O .downloads/BepInEx/BepInEx.zip"
     )
-    ctx.run("unzip .downloads/BepInEx/BepInEx.zip -d .downloads/BepInEx")
+    ctx.run("unzip -u .downloads/BepInEx/BepInEx.zip -d .downloads/BepInEx")
     ctx.run("rm .downloads/BepInEx/BepInEx.zip")
 
     ##################
@@ -66,4 +69,29 @@ def setup_bepinex(
     # copy into steamapp #
     ######################
 
-    ctx.run(f"cp -rv .downloads/BepInEx/* {steamapp}")
+    ctx.run(f"cp -rv .downloads/BepInEx/* {VARS.STEAMAPP.value}")
+    ctx.run(
+        f"cp assets/config/BepInEx.cfg {VARS.STEAMAPP.value}/BepInEx/config/BepInEx.cfg"
+    )
+
+
+@invoke.task
+def setup_timberapi(ctx):
+    """
+    setup https://github.com/Timberborn-Modding-Central/TimberAPI/releases in the Timberborn folder
+    """
+
+    ######################
+    # download TimberAPI #
+    ######################
+
+    ctx.run("rm -rf .downloads/TimberAPI")
+    ctx.run("mkdir -p .downloads/TimberAPI")
+    ctx.run(
+        "wget "
+        "https://github.com/Timberborn-Modding-Central/TimberAPI/archive/refs/tags"
+        f"/v{VARS.TIMBERAPI_VERSION.value}.zip "
+        "-O .downloads/TimberAPI/TimberAPI.zip"
+    )
+    ctx.run("unzip -u .downloads/TimberAPI/TimberAPI.zip -d .downloads/TimberAPI")
+    ctx.run("rm .downloads/TimberAPI/TimberAPI.zip")
