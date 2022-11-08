@@ -12,6 +12,8 @@ import invoke
 
 
 class VARS(enum.Enum):
+    """constants"""
+
     BEPINEX_VERSION = "5.4.21"
     TIMBERAPI_VERSION = "0.5.0.0"
     STEAMAPP = r"~/Library/Application\ Support/Steam/steamapps/common/Timberborn/"
@@ -20,6 +22,8 @@ class VARS(enum.Enum):
 @invoke.task
 def setup_bepinex(ctx):
     """
+    usage: inv mac.setup-bepinex
+
     setup https://github.com/BepInEx/BepInEx/releases in the Timberborn folder
     """
 
@@ -71,14 +75,16 @@ def setup_bepinex(ctx):
 
     ctx.run(f"cp -rv .downloads/BepInEx/* {VARS.STEAMAPP.value}")
     ctx.run(
-        f"cp assets/config/BepInEx.cfg {VARS.STEAMAPP.value}/BepInEx/config/BepInEx.cfg"
+        f"cp assets/BepInEx/config/BepInEx.cfg {VARS.STEAMAPP.value}/BepInEx/config/BepInEx.cfg"
     )
 
 
 @invoke.task
 def setup_timberapi(ctx):
     """
-    setup https://github.com/Timberborn-Modding-Central/TimberAPI/releases in the Timberborn folder
+    usage: inv mac.setup-timberapi
+
+    setup https://github.com/Timberborn-Modding-Central/TimberAPI/releases local files
     """
 
     ######################
@@ -89,9 +95,38 @@ def setup_timberapi(ctx):
     ctx.run("mkdir -p .downloads/TimberAPI")
     ctx.run(
         "wget "
-        "https://github.com/Timberborn-Modding-Central/TimberAPI/archive/refs/tags"
-        f"/v{VARS.TIMBERAPI_VERSION.value}.zip "
+        "https://github.com/Timberborn-Modding-Central/TimberAPI/releases/download"
+        f"/v{VARS.TIMBERAPI_VERSION.value}"
+        f"/TimberAPI.v{VARS.TIMBERAPI_VERSION.value}_ThunderStorePackage.zip "
         "-O .downloads/TimberAPI/TimberAPI.zip"
     )
     ctx.run("unzip -u .downloads/TimberAPI/TimberAPI.zip -d .downloads/TimberAPI")
     ctx.run("rm .downloads/TimberAPI/TimberAPI.zip")
+
+    ######################
+    # copy into steamapp #
+    ######################
+
+    ctx.run(
+        f"cp -rv .downloads/TimberAPI/TimberAPI {VARS.STEAMAPP.value}/BepInEx/plugins"
+    )
+
+
+@invoke.task
+def sync_mods(ctx):
+    """
+    usage: inv mac.sync-mods
+
+    sync mods into the Timberborn folder
+    """
+    ctx.run(f"cp -rv mods/* {VARS.STEAMAPP.value}/BepInEx/plugins")
+
+
+@invoke.task
+def clear_plugins(ctx):
+    """
+    usage: inv mac.clear-plugins
+
+    cleanup Timberborn `/BepInEx/plugins` folder
+    """
+    ctx.run(f"rm -rf {VARS.STEAMAPP.value}/BepInEx/plugins/*")

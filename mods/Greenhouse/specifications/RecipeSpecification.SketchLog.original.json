@@ -1,0 +1,21 @@
+{
+    "Id": "SketchLog",
+    "DisplayLocKey": "KyP.sketch.logs",
+    "CycleDurationInHours": 2,
+    "CyclesCapacity": 32,
+    "Ingredients": [],
+    "Products": [
+        {
+            "Good": {
+                "Id": "Log"
+            },
+            "Amount": 1
+        }
+    ],
+    "ProducedSciencePoints": 0,
+    "Fuel": {
+        "Id": "Water"
+    },
+    "CyclesFuelLasts": 200,
+    "FuelCapacity": 5
+}
