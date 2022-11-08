@@ -1,6 +1,6 @@
 {
-    "Id": "SketchLog",
-    "DisplayLocKey": "KyP.sketch.logs",
+    "Id": "Greenhouse",
+    "DisplayLocKey": "coilysiren.greenhouse.default",
     "CycleDurationInHours": 2,
     "CyclesCapacity": 32,
     "Ingredients": [],
